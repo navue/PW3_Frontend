@@ -1,4 +1,4 @@
-const backendURL = "http://localhost:3000"; // Ajustalo si tu backend usa otro puerto
+const backendURL = "http://localhost:3000";
 
 // REGISTRO
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
@@ -27,6 +27,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
   const res = await fetch(`${backendURL}/ingreso`, {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
@@ -34,9 +35,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const result = await res.json();
   if (res.ok) {
     localStorage.setItem('token', result.accessToken);
-    alert("Ingreso exitoso.");
-    // Podés redirigir si querés:
-    // window.location.href = "index.html";
+    window.location.href = '/comentarios.html';
   } else {
     alert(result.mensaje || "Credenciales inválidas.");
   }

@@ -1,40 +1,96 @@
+input {
+  display: block;
+  margin: 0.5rem auto;
+  padding: 0.5rem;
+  width: 90%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
 section {
-    background-image: url("img/fondo.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    text-align: center;
-    padding: 2rem;
-  }
-  
-  form {
-    background-color: rgb(255, 190, 70);
-    max-width: 400px;
-    margin: 1rem auto;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  input {
-    display: block;
-    margin: 0.5rem auto;
-    padding: 0.5rem;
-    width: 90%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+  background-image: url("/img/fondo.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+}
+
+#registerForm, #loginForm {
+  background-color: rgb(255, 190, 70);
+  max-width: 400px;
+  margin: 1rem auto;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#descripcion,
+#agregar,
+#fondoEditar form {
+  max-width: 720px;
+  margin: auto;
+}
+
+#descripcion {
+  padding-bottom: 15px;
+}
+
+#agregar,
+#fondoEditar {
+  background-color: rgb(255, 190, 70);
+}
+
+#mostrarTodosForm,
+#filtrarPorIdForm,
+#filtrarPorEmailForm,
+#EliminarTodosForm {
+  padding: 15px;
+}
+
+#fondoEditar form {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.table-fixed {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table-fixed th,
+.table-fixed td {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.w-10 {
+  width: 10%;
+}
+
+.w-15 {
+  width: 15%;
+}
+
+.w-5 {
+  width: 5%;
+}
+
+.w-35 {
+  width: 35%;
+}
