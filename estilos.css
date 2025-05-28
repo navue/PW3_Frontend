@@ -1,27 +1,4 @@
-input {
-  display: block;
-  margin: 0.5rem auto;
-  padding: 0.5rem;
-  width: 90%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-section {
+body {
   background-image: url("/img/fondo.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -62,6 +39,29 @@ section {
 
 #fondoEditar form {
   text-align: center;
+}
+
+.inputIndex {
+  display: block;
+  margin: 0.5rem auto;
+  padding: 0.5rem;
+  width: 90%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.buttonIndex {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.buttonIndex:hover {
+  background-color: #0056b3;
 }
 
 .hidden {

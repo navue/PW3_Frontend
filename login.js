@@ -37,6 +37,13 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     localStorage.setItem('token', result.accessToken);
     window.location.href = '/comentarios.html';
   } else {
-    alert(result.mensaje || "Credenciales inválidas.");
+    //Si viene un array de errores
+    if (Array.isArray(result.errores)) {
+      // Concatenar todos los mensajes de error en una cadena
+      const mensajes = result.errores.map(e => e.msg || e.message || JSON.stringify(e)).join('\n');
+      alert(mensajes);
+    } else if (result.mensaje) {
+      alert(result.mensaje);
+    }
   }
 });
