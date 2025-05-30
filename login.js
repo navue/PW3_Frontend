@@ -1,6 +1,6 @@
 const backendURL = "http://localhost:3000";
 
-// REGISTRO
+// Registro
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(e.target).entries());
@@ -20,7 +20,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
   }
 });
 
-// LOGIN
+// Login
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(e.target).entries());
@@ -37,7 +37,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     localStorage.setItem('token', result.accessToken);
     window.location.href = '/comentarios.html';
   } else {
-    //Si viene un array de errores
+    // Si viene un array de errores
     if (Array.isArray(result.errores)) {
       // Concatenar todos los mensajes de error en una cadena
       const mensajes = result.errores.map(e => e.msg || e.message || JSON.stringify(e)).join('\n');
