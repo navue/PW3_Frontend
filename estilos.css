@@ -6,6 +6,11 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+#logoutBtn {
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+}
+
 #registerForm, #loginForm {
   background-color: rgb(255, 190, 70);
   max-width: 400px;

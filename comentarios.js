@@ -1,135 +1,198 @@
 const backendURL = 'http://localhost:3000';
 
+// Renderizar la página
 document.addEventListener('DOMContentLoaded', () => {
-  cargarComentarios();
+    cargarEmailDesdeSesion();
+    cargarComentarios();
+});
+
+// Reestablece el formulario de agregar comentario
+document.getElementById("reestablecerBtn").addEventListener("click", () => {
+  const form = document.getElementById("insertarComentarioForm");
+  const emailInput = form.querySelector('input[name="email"]');
+  const emailActual = emailInput.value;
+  form.reset();
+  cargarEmailDesdeSesion();
+});
+
+
+// Enviar el comentario
+document.addEventListener("DOMContentLoaded", () => {
+    const insertarComentarioForm = document.getElementById("insertarComentarioForm");
+
+    insertarComentarioForm?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(insertarComentarioForm);
+        const datos = {
+            apellido: formData.get("apellido"),
+            nombre: formData.get("nombre"),
+            asunto: formData.get("asunto"),
+            mensaje: formData.get("mensaje"),
+        };
+
+        try {
+            const token = localStorage.getItem("token");
+
+            const response = await fetch(`${backendURL}/agregar`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify(datos),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("Comentario agregado con éxito.");
+                insertarComentarioForm.reset();
+            } else {
+                const errores = result.errores?.map(err => err.msg).join("\n") || result.error || response.statusText;
+                alert("Error: " + errores);
+            }
+            cargarEmailDesdeSesion();
+            cargarComentarios();
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Ocurrió un error al enviar el comentario.");
+        }
+    });
+});
+
+// Botón para cerrar sesión
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = "index.html";
 });
 
 // Botón que obtiene y muestra comentarios
 document.getElementById('btnMostrarTodo').addEventListener('click', async () => {
-  cargarComentarios();
+    cargarComentarios();
 });
 
 // Botón que obtiene y muestra comentarios por ID
 document.getElementById("filtrarPorIdForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const id = document.getElementById("itemId").value;
+    e.preventDefault();
+    const id = document.getElementById("itemId").value;
 
-  try {
-    const res = await fetch(`${backendURL}/comentarios?id=${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    try {
+        const res = await fetch(`${backendURL}/comentarios?id=${id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (!res.ok) throw new Error(data.error || data.mensaje || "Error en la respuesta");
+        if (!res.ok) throw new Error(data.error || data.mensaje || "Error en la respuesta");
 
-    if (data.comentario) {
-      renderizarComentarios([data.comentario]);
-    } else {
-      alert(data.mensaje || "No se encontró el comentario.");
+        if (data.comentario) {
+            renderizarComentarios(data.comentario);
+        } else {
+            alert(data.mensaje || "No se encontró el comentario.");
+        }
+
+    } catch (error) {
+        alert("Error: " + error.message);
     }
-
-  } catch (error) {
-    alert("Error: " + error.message);
-  }
 });
 
 // Botón que obtiene y muestra comentarios por email
 document.getElementById("filtrarPorEmailForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("inputEmail").value;
+    e.preventDefault();
+    const email = document.getElementById("inputEmail").value;
 
-  try {
-    const res = await fetch(`${backendURL}/comentarios?email=${email}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    try {
+        const res = await fetch(`${backendURL}/comentarios?email=${email}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (!res.ok) throw new Error(data.error || data.mensaje || "Error en la respuesta");
+        if (!res.ok) throw new Error(data.error || data.mensaje || "Error en la respuesta");
 
-    if (data.comentarios?.length > 0) {
-      renderizarComentarios(data.comentarios);
-    } else {
-      alert(data.mensaje || "No se encontraron comentarios.");
+        if (data.comentarios?.length > 0) {
+            renderizarComentarios(data.comentarios);
+        } else {
+            alert(data.mensaje || "No se encontraron comentarios.");
+        }
+
+    } catch (error) {
+        alert("Error: " + error.message);
     }
-
-  } catch (error) {
-    alert("Error: " + error.message);
-  }
 });
 
 // Botón que borra todos los comentarios
 document.getElementById('btnBorrarTodos').addEventListener('click', async () => {
-  const confirmar = confirm('¿Estás seguro de que deseas borrar todos los comentarios?');
-  if (!confirmar) return;
+    const confirmar = confirm('¿Estás seguro de que deseas borrar todos los comentarios?');
+    if (!confirmar) return;
 
-  const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-  try {
-    const res = await fetch(`${backendURL}/eliminar`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    try {
+        const res = await fetch(`${backendURL}/eliminar`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (!res.ok) {
-      throw new Error(data.error || data.mensaje || 'Error desconocido del servidor');
+        if (!res.ok) {
+            throw new Error(data.error || data.mensaje || 'Error desconocido del servidor');
+        }
+
+        alert(data.mensaje || 'Comentarios eliminados');
+        cargarComentarios();
+    } catch (error) {
+        alert(`Error: ${error.message}`);
+        console.error('Error al borrar todos los comentarios:', error);
     }
-
-    alert(data.mensaje || 'Comentarios eliminados');
-    cargarComentarios();
-  } catch (error) {
-    alert(`Error: ${error.message}`);
-    console.error('Error al borrar todos los comentarios:', error);
-  }
 });
 
 // Obtiene y muestra comentarios
 async function cargarComentarios() {
-  const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-  try {
-    const res = await fetch(`${backendURL}/comentarios`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    try {
+        const res = await fetch(`${backendURL}/comentarios`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (!res.ok) {
-      throw new Error(data.mensaje || 'Error en la respuesta');
+        if (!res.ok) {
+            throw new Error(data.mensaje || 'Error en la respuesta');
+        }
+
+        if (data.comentarios && data.comentarios.length > 0) {
+            renderizarComentarios(data.comentarios);
+        } else {
+            alert(data.mensaje || 'No hay comentarios.');
+            document.querySelector("table tbody").innerHTML = '';
+        }
+
+    } catch (error) {
+        console.error('Error al cargar comentarios:', error);
+        alert('Error al cargar comentarios');
     }
-
-    if (data.comentarios && data.comentarios.length > 0) {
-      renderizarComentarios(data.comentarios);
-    } else {
-      alert(data.mensaje || 'No hay comentarios.');
-      document.querySelector("table tbody").innerHTML = '';
-    }
-
-  } catch (error) {
-    console.error('Error al cargar comentarios:', error);
-    alert('Error al cargar comentarios');
-  }
 }
 
 // Renderiza la lista de comentarios en la tabla
 function renderizarComentarios(comentarios) {
-  const tbody = document.querySelector("table tbody");
-  tbody.innerHTML = "";
+    const tbody = document.querySelector("table tbody");
+    tbody.innerHTML = "";
 
-  comentarios.forEach(({ _id, fecha, apellido, nombre, email, asunto, mensaje }) => {
-    const tr = document.createElement("tr");
+    comentarios.forEach(({ _id, fecha, apellido, nombre, email, asunto, mensaje }) => {
+        const tr = document.createElement("tr");
 
         tr.innerHTML = `
           <th scope="row" class="w-15">${_id}</th>
@@ -154,7 +217,28 @@ function renderizarComentarios(comentarios) {
           </td>
         `;
 
-    tbody.appendChild(tr);
-  });
+        tbody.appendChild(tr);
+    });
 }
 
+// Carga el email desde la sesión
+function cargarEmailDesdeSesion() {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+        const payloadBase64 = token.split('.')[1];
+        const payloadJson = atob(payloadBase64);
+        const payload = JSON.parse(payloadJson);
+        const emailUsuario = payload.username;
+
+        const emailInput = document.querySelector('input[name="email"]');
+        if (emailInput) {
+            emailInput.value = emailUsuario;
+            emailInput.readOnly = true;
+            emailInput.classList.add("bg-light");
+        }
+    } catch (error) {
+        console.error("Error al decodificar el token:", error);
+    }
+}
