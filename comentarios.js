@@ -1,5 +1,3 @@
-const backendURL = 'http://localhost:3000';
-
 // Renderizar la página y envia el comentario
 document.addEventListener('DOMContentLoaded', () => {
     cargarEmailDesdeSesion();
@@ -21,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const token = localStorage.getItem("token");
 
-            const response = await fetch(`${backendURL}/agregar`, {
+            const response = await fetch(`${BACKENDURL}/agregar`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -74,7 +72,7 @@ document.getElementById("filtrarPorIdForm").addEventListener("submit", async (e)
     const id = document.getElementById("itemId").value;
 
     try {
-        const res = await fetch(`${backendURL}/comentarios?id=${id}`, {
+        const res = await fetch(`${BACKENDURL}/comentarios?id=${id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
@@ -101,7 +99,7 @@ document.getElementById("filtrarPorEmailForm").addEventListener("submit", async 
     const email = document.getElementById("inputEmail").value;
 
     try {
-        const res = await fetch(`${backendURL}/comentarios?email=${email}`, {
+        const res = await fetch(`${BACKENDURL}/comentarios?email=${email}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
@@ -130,7 +128,7 @@ document.getElementById('btnBorrarTodos').addEventListener('click', async () => 
     const token = localStorage.getItem('token');
 
     try {
-        const res = await fetch(`${backendURL}/eliminar`, {
+        const res = await fetch(`${BACKENDURL}/eliminar`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -156,7 +154,7 @@ async function cargarComentarios() {
     const token = localStorage.getItem('token');
 
     try {
-        const res = await fetch(`${backendURL}/comentarios`, {
+        const res = await fetch(`${BACKENDURL}/comentarios`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -276,7 +274,7 @@ async function editarComentario(event, id) {
     try {
         const token = localStorage.getItem("token");
 
-        const res = await fetch(`${backendURL}/editar/${id}`, {
+        const res = await fetch(`${BACKENDURL}/editar/${id}`, {
             method: "PUT",
             headers: { 
                 "Content-Type": "application/json" ,
@@ -304,7 +302,7 @@ async function eliminarComentario(id) {
     try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch(`${backendURL}/eliminar/${id}`, {
+        const response = await fetch(`${BACKENDURL}/eliminar/${id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -330,18 +328,37 @@ function renderizarComentarios(comentarios) {
     const tbody = document.querySelector("table tbody");
     tbody.innerHTML = "";
 
+    // Uso DOMPurify para sanitizar el contenido antes de insertarlo
     comentarios.forEach(({ _id, fecha, apellido, nombre, email, asunto, mensaje }) => {
+        const apellidoSeguro = DOMPurify.sanitize(apellido);
+        const nombreSeguro = DOMPurify.sanitize(nombre);
+        const emailSeguro = DOMPurify.sanitize(email);
+        const asuntoSeguro = DOMPurify.sanitize(asunto);
+        const mensajeSeguro = DOMPurify.sanitize(mensaje);
+        const fechaSeguro = DOMPurify.sanitize(fecha);
+
+        // Muestro alert si alguno fue sanitizado
+        if (
+            apellidoSeguro !== apellido ||
+            nombreSeguro !== nombre ||
+            emailSeguro !== email ||
+            asuntoSeguro !== asunto ||
+            mensajeSeguro !== mensaje ||
+            fechaSeguro !== fecha
+        ) {
+            alert("Se detectó contenido peligroso y fue eliminado de algún comentario.");
+        }
+
         const tr = document.createElement("tr");
         tr.id = `comentario-${_id}`;
-
         tr.innerHTML = `
           <th scope="row">${_id}</th>
-          <td class="td-fecha">${fecha}</td>
-          <td class="td-apellido">${apellido}</td>
-          <td class="td-nombre">${nombre}</td>
-          <td class="td-email">${email}</td>
-          <td class="td-asunto">${asunto}</td>
-          <td class="td-mensaje">${mensaje}</td>
+          <td class="td-fecha">${fechaSeguro}</td>
+          <td class="td-apellido">${apellidoSeguro}</td>
+          <td class="td-nombre">${nombreSeguro}</td>
+          <td class="td-email">${emailSeguro}</td>
+          <td class="td-asunto">${asuntoSeguro}</td>
+          <td class="td-mensaje">${mensajeSeguro}</td>
           <td class="w-5">
             <button id="editarBtn-${_id}" class="btn btn-outline-primary mb-2" onclick="displayFormularioEditar('${_id}')" title="Editar">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">

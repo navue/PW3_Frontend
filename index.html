@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Ingreso / Registro</title>
   <link rel="stylesheet" href="estilos.css">
+  <script src="env.js"></script>
   <script defer src="login.js"></script>
 </head>
 <body>
@@ -12,16 +13,19 @@
 
     <h2>Registro</h2>
     <form id="registerForm">
-      <input class = "inputIndex" name="username" type="email" placeholder="Email" required />
-      <input class = "inputIndex" name="password" type="password" placeholder="Contraseña" required />
-      <button class= "buttonIndex" type="submit">Registrarse</button>
+      <!-- Validacion de datos HTML-->
+      <input class = "inputIndex" name="username" type="email" placeholder="ejemplo@dominio.com" required />
+      <input class = "inputIndex" name="password" type="password" placeholder="Min. 6 caracteres" required minlength="6" />
+      <input class = "inputIndex" name="confirmPassword" type="password" placeholder="Confirmar contraseña" required />
+      <button class = "buttonIndex" type="submit">Registrarse</button>
     </form>
 
     <h2>Ingreso</h2>
     <form id="loginForm">
-      <input class = "inputIndex" name="username" type="email" placeholder="Email" required />
+      <!-- Validacion de datos HTML-->
+      <input class = "inputIndex" name="username" type="email" placeholder="ejemplo@dominio.com" required />
       <input class = "inputIndex" name="password" type="password" placeholder="Contraseña" required />
-      <button class= "buttonIndex" type="submit">Ingresar</button>
+      <button class = "buttonIndex" type="submit">Ingresar</button>
     </form>
   </section>
 </body>

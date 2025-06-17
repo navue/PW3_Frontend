@@ -1,11 +1,9 @@
-const backendURL = "http://localhost:3000";
-
 // Registro
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(e.target).entries());
 
-  const res = await fetch(`${backendURL}/registro`, {
+  const res = await fetch(`${BACKENDURL}/registro`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -25,7 +23,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(e.target).entries());
 
-  const res = await fetch(`${backendURL}/ingreso`, {
+  const res = await fetch(`${BACKENDURL}/ingreso`, {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
@@ -34,6 +32,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
   const result = await res.json();
   if (res.ok) {
+    // Almacenamiento de tokens
     localStorage.setItem('token', result.accessToken);
     window.location.href = '/comentarios.html';
   } else {
